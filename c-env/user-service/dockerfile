@@ -8,8 +8,10 @@ WORKDIR /app
 COPY . /app
 
 # Install any needed packages specified in requirements.txt
-RUN pip install Flask
-RUN pip install Flask Flask-SQLAlchemy
+RUN pip install Flask Flask-SQLAlchemy gunicorn
+
+# Copy the index.html into the container
+COPY index.html /app/templates/index.html
 
 # Make port 5001 available to the world outside this container
 EXPOSE 5001
@@ -17,5 +19,5 @@ EXPOSE 5001
 # Define environment variable
 ENV NAME UserService
 
-# Run app.py when the container launches
-CMD ["python", "user_service.py"]
+# Command to run on container start using Gunicorn
+CMD ["gunicorn", "-w", "4", "-b", "0.0.0.0:5001", "user_service:app"]

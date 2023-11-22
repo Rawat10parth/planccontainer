@@ -1,5 +1,16 @@
 version: '3'
 services:
+  web-server:
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - ./app:/usr/share/nginx/html
+    depends_on:
+      - video-service
+      - user-service
+      - content-service
+
   video-service:
     build:
       context: ./video-service
@@ -7,7 +18,7 @@ services:
     ports:
       - "5000:5000"
     volumes:
-      - ./videos:/app/videos  # Mount the videos directory
+      - ./videos:/app/videos  
 
   user-service:
     build:
@@ -17,6 +28,7 @@ services:
       - "5001:5001"
     volumes:
       - ./user-service:/app
+    command: ["gunicorn", "-w", "4", "-b", "0.0.0.0:5001", "user_service:app"]
 
   content-service:
     build:
@@ -26,3 +38,4 @@ services:
       - "5002:5002"
     volumes:
       - ./content-service:/app
+    command: ["gunicorn", "-w", "4", "-b", "0.0.0.0:5002", "content_service:app"]

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Descriptions</title>
+    <!-- You may include additional stylesheets, scripts, etc. as needed -->
+</head>
+<body>
+
+    <h2>Movie Descriptions</h2>
+
+    <div id="movieList"></div>
+
+    <script>
+        // Use AJAX (e.g., with fetch or jQuery) to retrieve movie data from the content service
+        // Update the URL to match your actual endpoint
+        fetch('http://localhost:5002/content', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Iterate through the movie data and display descriptions
+            data.forEach(movie => {
+                var movieInfo = document.createElement('div');
+                movieInfo.innerHTML = `<strong>Title:</strong> ${movie.title}<br><strong>Description:</strong> ${movie.description}<br><strong>Video Filename:</strong> ${movie.video_filename}<br><br>`;
+                document.getElementById('movieList').appendChild(movieInfo);
+            });
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    </script>
+
+</body>
+</html>
